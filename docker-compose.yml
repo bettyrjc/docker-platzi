@@ -1,0 +1,18 @@
+version: "3"
+# aqui empieza la diferencia, porque nosotros hablamos de servicios no de contenedores
+# es un componenten que sirve a la totalidad de la aplicaciones
+services:
+  app:
+    build: .
+    environment:
+      MONGO_URL: "mongodb://db:27017/test"
+    depends_on:
+      - db
+    ports:
+      - "3000-3010:3000"
+    volumes:
+      - .:/usr/src
+      # QUE ESTO NO ME LO TOQUE NO SE REISCRIBA NI NADA
+      - /usr/src/node_modules
+  db:
+    image: mongo
