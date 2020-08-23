@@ -106,3 +106,18 @@ Los servicios es un componente que sirve a la totalidad de las aplicaciones, dif
 nos permite usar docker files donde tiene varias fases de build, pero esto se puede conectar entre ellos.
 **docker build -z nombre -f url**
 Tambien existe _docker in docker_ que se esta desde un container hablandole al docker deamon que esta en nuestra maquina
+
+Crear la imagen de docker, la primera vez que vamos a ejecutar el proyecto o cuando agregamos un nuevo paquete al package.json debemos hacer un build.
+docker-compose -f docker-compose.local.yml build
+
+2. Luego que termine podemos levantar el proyecto con:
+   docker-compose -f docker-compose.local.yml up
+
+3. Para tumbar el proyecto basta con dartle CTRL + C, pero si una dependencia no te agarra despues de hacer el build debes tumbar todo el proyecto para que se elimine el contenedor viejo, esto lo hacemos con:
+   docker-compose -f docker-compose.local.yml down
+
+Hay dos formas de agregar una nueva dependencia, la primera es agregandola directo en el package.json de forma manual o ejecutando el siguiente comando:
+docker-compose -f docker-compose.local.yml run --rm app npm install --save PAQUETE
+
+Un ejemplo:
+docker-compose -f docker-compose.local.yml run --rm app npm install --save node-sass
