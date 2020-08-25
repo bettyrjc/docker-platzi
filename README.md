@@ -1,123 +1,111 @@
-# Docker!!!
+# Docker 🐳
 
-Permite resolver problemas en construir, distribuir y ejecutar software en diferentes plataformas
+Son agrupaciones de procesos que estan aislado del resto del mundo, permitiendonos resolver problemas de cosntrucción, distribución y ejecución de software en diferentes plataformas.
 
-# Containarizacion
+![Alt text](https://lh3.googleusercontent.com/proxy/3HRlWJor7WSWWJqUC8BC7b-FT9m-AZhpqIkIudiWFkJPuYLT_H1XocxSThUb35LdBa0Sg8QjfyKKXDstcN5ojy-Z94YH4Ct4lnX75J8VT1zQaHKA "Optional Title")
 
-los **contenedores** son un entidad logica, que agrupan procesos que se ejecutan de forma nativa como cualquier otra aplicacion
+## Instalar docker 💾
 
-Se le dice entidad logica, porque no tiene un limite estricto.
-Es un estandar para llevar algo dentro de agrupadores de proceso
-son:
--Versatiles,
--Eficientes,
--Aislado
+[Instalar docker](https://docs.docker.com/engine/install/)
 
-Docker se encarga de:
-**Construir** **Distribuir** **Ejecutar** codigo en cualquier lado.
+### 🤔 ¿Como funciona Docker?🤔
 
-# Comandos
+### ¿Qué es un contenedor?
 
-**docker ps** Lista todos los documentos.
-**docker ps -aq** esto muestra solos id
-**docker inspect nombre_contenedor** inspeccionar
-**docker inspect -f '{{json.Config.Env}} nombre_contendor** Filtrar
-**docker rena nombre_viejo nombre_nuevo** renombrar container
-**docker rm nombre_contenedor** borrar un contenedor
-**docker \$(docker ps -aq)** borrar todos los contenedores.
+Es una entidad logica que no tiene limites que ejecuta sus procesos de forma nativa, de uno o mas procesos. Es una pieza fundamental de docker.
 
-**docker run -it nombre_contenedor** correr el contenedor en la terminal.
-**docker rm -f nombre_contenedor** apaga el proceso, lo apaga y lo elimina.
-**docker kill nombre_contenedor** mata el proceso.
+![Alt text](https://blog.carreralinux.com.ar/wp-content/uploads/2020/06/docker_imagenes_contenedores.png "Optional Title")
 
-## Exponiendo un contenedor al mundo exterior
+Los procesos de un contenedor, no conoce mas alla de lo que se le permite, y solo tiene acceso al directorio que se le permite ver, no sabe que existe algo mas.
 
-Los contenedores estan aislados del sistema y a nivel de red, cada contenedor tiene su propio stack de net y sus propios puertos.
-**docker run -d --name server -p 8080:80 nombre_contenedor** Redirije a los puertos y crea.
+### Algunos comandos en docker ⌨
 
-- -p indica el puerto.
-- 8080: es el puerto de la pc.
-- 80 es el puerto de la net.
+```bash
+docker ps -a # lista todos los procesos,-a muestra todo el conenido
+```
 
-## Volumes
+```bash
+docker inspect <id> o <name> # Inspecciona un contenedor
+```
 
-Nos ayuda a mantener todo organizado
-**docker volume ls**
-**docker volume prune** borra los volumenes que estan en uso por ningun contenedor
+```bash
+docker inspect -f  #-f filtra información
+```
 
-### Crear un volume
+```bash
+docker rename <old_name> <new_name> #Renombrar un contenedor
+```
 
-mount src=nombre_volumen
-**docker run -d --name name --mount src=nombre_volumen dts=/data/name mongo**
+```bash
+docker run <name> # Crear un contenedor
+```
 
-## Imagenes
+```bash
+docker logs <name> # Ver el output contenedores
+```
 
-Son un componente fundamental de docker y sin ellas los contenedores no tendrian sentido. **son fundamentalmen plantillas o templates**
-Una vez creada, no cambian.
+```bash
+docker rm  <name> # Borrar un contenedor
+```
 
-Estan construidas de una capa base y se van montando capas sobre ellas.
+```bash
+docker rm $(docker ps -aq) # Borrar todos los contenedores
+```
 
-- Cada capa es inmutable
+```bash
+docker exec -it  <name> # Ejecutar un proceso de un contenedor existente,
+ el it es el modo iterativo
+```
 
-**docker image ls** listar las imagenes
-**docker pull image:version** cuando te quieres traer una imagen, en una version especifica.
+```bash
+docker rm -f <name> #Salir del modo iterativo,
+ aqui mata el contenedor asi se este ejecutando
+```
 
-### Construyendo nuestras propias imagenes
+Exponiendo contenedores 🌎
 
-Se necesita **Dockerfile**
-FROM node:12
+```bash
+docker run -d --name <name> image
 
-- esto es para que no se repite si hacemos build varias veces
-  COPY ["package.json", "package-lock.json", "/usr/src/"]
-  WORKDIR /usr/src
-  RUN npm install --only=production
-  COPY [".", "/usr/src/"]
-  RUN npm install --only=development
-  EXPOSE 3000
+-d es dettach, lo que hace es que el contenedor no me arroje un output,
+ si no que lo deje en modo interactivo
+```
 
-- chequear los archivos que cuando haya uno neuvo se reinicie
-  CMD ["npx", "nodemon", "index.js"]
+Para que un contenedor se comunique con el mundo exterior hay que configurar su network, y esto se hace con la ayuda de los ports.
 
-**docker build -t npmbre_imagen** construir la imagen.
-**docker run -it nombre_imagen** correr la imagen.
--crear
-**docker network create --attachable nombre_net**
-**docker network connect nombre_net nombre_contenedor**
-**docker inspect nombre_net** aqui vemos que nombre
+```bash
+docker run -d --name <name> -p 3000:80 image
+# -p indica el puerto
+```
 
-# Docker compose
+🕵 3000:80, en este caso el puerto 3000(izq) es el de mi máquina y el 80(derecha) es el puerto de la red.
 
-Es una herramienta que nos permite describir de forma declarativa la arquitectura de nuestra aplicacion, utiliza compose (docker-compose.yml)
+```bash
+docker run --name <name> -d -v path:where
+ # montar un directorio de archivos a un contenedor.
+-v volume.
+```
 
-Es una herramienta que nos permite describir de forma declarativa la arquitectura de nuestra app.
+## ¿Que son los volumes? 🧐
 
-**docker rm -f \$(docker ps -aq)** tumbar o borrar todo.
-**docker network rm nombre_net** borrar network
-Los servicios es un componente que sirve a la totalidad de las aplicaciones, diferencias entre un servicio u un contenedor, es que en un servicio puede haber mas de un contenido.
+Volume es uno de los tipos de formatos de docker para preservar la data, almacenarán los ficheros que copiemos a ese contenedor.Los volumes son una evolucion del bind mount
 
--depends_on: es cuando un servicio depende de otro
-**docker-compose up -d** ese flag de d, es un dittach
-**docker-compose ps**
-**docker-compose logs app** solo ve los de un servicio.
-**docker-compose exec app bash**
+Usará el espacio de nuestro equipo real y en “/var/lib/docker/volumes” creará una carpeta para cada contenedor, toda la informacion de nuestros contenedores estaran en el mismo sitio, haciendolo mas facil su migracion de una pc a otra.
 
-## docker multi stage build
+![Alt text](https://miro.medium.com/max/624/1*j0g82wL5oUl3dgwIXZBIpA.png "Optional Title")
 
-nos permite usar docker files donde tiene varias fases de build, pero esto se puede conectar entre ellos.
-**docker build -z nombre -f url**
-Tambien existe _docker in docker_ que se esta desde un container hablandole al docker deamon que esta en nuestra maquina
+- tmpfs mount: es el unico que no peresiste la data, es ideal para cuando manejamos informacion sensible.
 
-Crear la imagen de docker, la primera vez que vamos a ejecutar el proyecto o cuando agregamos un nuevo paquete al package.json debemos hacer un build.
-docker-compose -f docker-compose.local.yml build
+-bind mount: Hace persistencia de datos, es parecido al volume solo que este guarda la informacion en todo el fileSystem y no en un sitio en especifico, por eso volumen es una evolución de los bind mounts.
 
-2. Luego que termine podemos levantar el proyecto con:
-   docker-compose -f docker-compose.local.yml up
+```bash
+docker volume ls # Listar volume
+```
 
-3. Para tumbar el proyecto basta con dartle CTRL + C, pero si una dependencia no te agarra despues de hacer el build debes tumbar todo el proyecto para que se elimine el contenedor viejo, esto lo hacemos con:
-   docker-compose -f docker-compose.local.yml down
+```bash
+docker volume prune #Borrar los volumenes que no estan en uso
+```
 
-Hay dos formas de agregar una nueva dependencia, la primera es agregandola directo en el package.json de forma manual o ejecutando el siguiente comando:
-docker-compose -f docker-compose.local.yml run --rm app npm install --save PAQUETE
-
-Un ejemplo:
-docker-compose -f docker-compose.local.yml run --rm app npm install --save node-sass
+```bash
+docker volume create mis_datos # Crear un volumen
+```
