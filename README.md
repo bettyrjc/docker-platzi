@@ -109,3 +109,162 @@ docker volume prune #Borrar los volumenes que no estan en uso
 ```bash
 docker volume create mis_datos # Crear un volumen
 ```
+
+## Imagenes
+
+Son plantillas o templates de contenedores, y a partir de estas imagenes se generan los contenedores que vamos a usar.
+
+Las imagenes son un conjunto de capas o layers y todo parte de una capa base
+y capas que se van montando sobre ella.
+Las imagenes en docker son inmutable, es decir, que cada capa que se va montando sobre una imagen es añadiendole algo a la capa anterior.
+
+```bash
+docker pull image # Trae una image que no tenemos
+```
+
+```bash
+docker image ls # Lista las imagenes.
+```
+
+## Construir una imagen.
+
+```bash
+FROM  node:12 # from es la base de nuestra imagen.
+Node es la imagen en su version 12.
+```
+
+```bash
+RUN  npm install # Correr un comando
+```
+
+```bash
+build .
+#  es el CONTEXT del path y todo ese path se le da al deamon,
+# y usa todo lo que hay ahí en tiempo de build
+```
+
+Con el comando build hace una imagen, y a partir de la iamgen hace un contenedor.
+
+```bash
+COPY ['.', 'usr/src/'] # parte del contenxto de build
+# y copia todo lo que esta en el build
+```
+
+El copy se copia los archivos que son afectados por el comando run, ahi se dice que afecta todos, pero _package.json_ package.lock.json\* no son afectados siempre.
+
+```bash
+# esto es para que no se repite si hacemos build varias veces
+COPY ["package.json", "package-lock.json", "/usr/src/"]
+```
+
+```bash
+CMD ["npx", "nodemon", "index.js"]
+#Se define el comando por defecto que va a correr el contenedor
+# chequear los archivos
+# que cuando haya uno nuevo se reinicie
+```
+
+```bash
+EXPOSE 3000 # exponer el puerto
+```
+
+## Otros comandos de ayuda en docker ☝️
+
+```bash
+docker run -it <nombre-image> #correr la imagen
+```
+
+```bash
+docker run -d --name container image #conectar una imagen con un contenedor
+```
+
+```bash
+docker network inspect nombre_networ --name #ver si un contenedor esta conectado
+
+```
+
+```bash
+docker run -d --name <nombre_contenedor> -p 3000:3000 --env VARIABLE_NOMBRE= URL_VARIABLE <nombre_image>
+
+# -env: agregar una variable de entorno.
+```
+
+```bash
+docker networkn <network-name> <contaniner-name> #Conectar dos contenedores entre si
+```
+
+# 🐳 Docker Compose 🐳
+
+Es una herramienta que nos permite describir de forma declarativa la arquitectura de nuestra app
+
+docker-compose.yml <-- en este archivo.
+
+- Versión : Que ocupe la version.
+
+- Servicios: Se habla de servicios, no de contenedores. Un servicio puede tener mas de un contendor.
+
+  Dentro de servicios esta:
+  -image: Nombre de la imagen.
+
+  - enviroment: .env, es lo equivalente a añadir variables de entorno.
+  - depend_on: que este servicio depende de otro servicio.
+    -ports: puertos.
+
+- volumes: una lista de descripcion de como queremos usar los volumenes
+  ```bash
+      - .:/usr/src #que vaya a los directorios
+      # QUE ESTO NO ME LO TOQUE NO SE REISCRIBA NI NADA
+      - /usr/src/node_modules
+      # esto lo que hace es que solo se buildee a menos que haya algo nuevo
+  ```
+
+## Comando de docker-compose ☝️
+
+```bash
+docker-compose up -d
+```
+
+```bash
+docker-compose ps
+```
+
+```bash
+docker-compose logs
+```
+
+```bash
+docker-compose exec <name_serv>
+```
+
+```bash
+docker-compose exec <name_serv> bash
+```
+
+```bash
+docker-compose build #ejecuta todo lo que ya conocemos
+```
+
+```bash
+docker-compose down # tumbar/eliminar los servicios
+```
+
+```bash
+docker-compose scale <name_services>=5 # que escale a a cinco contenedores.
+```
+
+## Docker ignore ⬛
+
+Nos permite excluir archivos que no queremos en la imagen final, cuando se hace el build.
+
+```bash
+*.log
+.dockerignore
+.git
+.gitignore
+build/*
+Dockerfile
+node_modules
+npm-debug.log*
+README.md
+
+```
