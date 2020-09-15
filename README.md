@@ -16,7 +16,7 @@ Es una entidad logica que no tiene limites que ejecuta sus procesos de forma nat
 
 ![Alt text](https://blog.carreralinux.com.ar/wp-content/uploads/2020/06/docker_imagenes_contenedores.png "Optional Title")
 
-Los procesos de un contenedor, no conoce mas alla de lo que se le permite, y solo tiene acceso al directorio que se le permite ver, no sabe que existe algo mas.
+Los procesos de un contenedor, no conoce más allá de lo que se le permite, y solo tiene acceso al directorio que se le permite ver, no sabe que existe algo mas.
 
 ### Algunos comandos en docker ⌨
 
@@ -143,7 +143,7 @@ build .
 # y usa todo lo que hay ahí en tiempo de build
 ```
 
-Con el comando build hace una imagen, y a partir de la iamgen hace un contenedor.
+Con el comando build hace una imagen, y a partir de la imagen hace un contenedor.
 
 ```bash
 COPY ['.', 'usr/src/'] # parte del contenxto de build
@@ -210,9 +210,9 @@ docker-compose.yml <-- en este archivo.
   - depend_on: que este servicio depende de otro servicio.
     -ports: puertos.
 
-- volumes: una lista de descripcion de como queremos usar los volumenes
+- volumes: una lista de descripción de como queremos usar los volumenes
   ```bash
-      - .:/usr/src #que vaya a los directorios
+      - .:/usr/src #que vaya a los directorios a hacer una correción
       # QUE ESTO NO ME LO TOQUE NO SE REISCRIBA NI NADA
       - /usr/src/node_modules
       # esto lo que hace es que solo se buildee a menos que haya algo nuevo
@@ -249,7 +249,7 @@ docker-compose down # tumbar/eliminar los servicios
 ```
 
 ```bash
-docker-compose scale <name_services>=5 # que escale a a cinco contenedores.
+docker-compose scale <name_services>=5 # que escale a cinco contenedores.
 ```
 
 ## Docker ignore ⬛
